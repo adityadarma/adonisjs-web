@@ -35,7 +35,10 @@ export default defineConfig({
     () => import('@adonisjs/shield/shield_provider'),
     () => import('@adonisjs/static/static_provider'),
     () => import('@adonisjs/lucid/database_provider'),
-    () => import('@adonisjs/auth/auth_provider')
+    () => import('@adonisjs/auth/auth_provider'),
+    () => import('@adonisjs/ally/ally_provider'),
+    () => import('@adonisjs/lock/lock_provider'),
+    () => import('@adonisjs/redis/redis_provider')
   ],
 
   /*
@@ -46,7 +49,7 @@ export default defineConfig({
   | List of modules to import before starting the application.
   |
   */
-  preloads: [() => import('#start/routes'), () => import('#start/kernel')],
+  preloads: [() => import('#start/routes'), () => import('#start/kernel'), () => import('#start/events')],
 
   /*
   |--------------------------------------------------------------------------

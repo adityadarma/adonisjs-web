@@ -34,5 +34,24 @@ export default await Env.create(new URL('../', import.meta.url), {
   DB_PORT: Env.schema.number(),
   DB_USER: Env.schema.string(),
   DB_PASSWORD: Env.schema.string.optional(),
-  DB_DATABASE: Env.schema.string()
+  DB_DATABASE: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring ally package
+  |----------------------------------------------------------
+  */
+  GOOGLE_CLIENT_ID: Env.schema.string(),
+  GOOGLE_CLIENT_SECRET: Env.schema.string(),
+  GOOGLE_CALLBACK_URL: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring the lock package
+  |----------------------------------------------------------
+  */
+  LOCK_STORE: Env.schema.enum(['redis', 'memory'] as const),
+
+  REDIS_HOST: Env.schema.string({ format: 'host' }),
+  REDIS_PORT: Env.schema.number()
 })
