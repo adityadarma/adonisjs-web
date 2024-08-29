@@ -4,4 +4,7 @@
     "rootDir": "./",
     "outDir": "./build",
   },
+  "exclude": [
+    "packages"
+  ]
 }
