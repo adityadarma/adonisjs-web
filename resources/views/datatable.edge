@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://cdn.datatables.net/2.1.5/css/dataTables.dataTables.css" id="app-style" rel="stylesheet" type="text/css" />
+  <title>Document</title>
+</head>
+<body>
+  <table id="example" class="display" style="width:100%">
+    <thead>
+        <tr>
+          <th>#</th>
+          <th>UUID</th>
+          <th>Code</th>
+          <th>User</th>
+          <th>Amount</th>
+          <th>Discount</th>
+          {{--  <th>Last Login</th>  --}}
+          {{--  <th>Coupon</th>  --}}
+          {{--  <th>Status</th>  --}}
+          {{--  <th>Action</th>  --}}
+        </tr>
+    </thead>
+</table>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+<script>
+  new DataTable('#example', {
+    ajax: '/datatables',
+    processing: true,
+    serverSide: true,
+    columns: [
+        { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false, width: "20px" },
+        { data: "uuid", name: "name" },
+        { data: "code", name: "email" },
+        { data: "user.name", name: "user.name" },
+        { data: "amount", name: "amount" },
+        { data: "discount", name: "discount" },
+        // { data: "lastLogin", name: "lastLogin" },
+        // { data: "coupon_user", name: "coupon_user" },
+        // { data: "isActive", name: "isActive" },
+        // { data: "action", name: "action", width: "20px" },
+    ]
+});
+</script>
+</body>
+</html>
