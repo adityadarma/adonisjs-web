@@ -10,6 +10,7 @@
 import router from '@adonisjs/core/services/router'
 import datatables from '@adityadarma/adonis-datatables/datatables'
 import Transaction from '#models/transaction'
+import LucidDataTable from '@adityadarma/adonis-datatables/lucid_datatable'
 
 router.on('/').render('pages/home')
 
@@ -27,15 +28,10 @@ router.get('/demo', async({view}) => {
 })
 
 router.get('/datatables', async () => {
-  return await datatables.of(Transaction.query().preload('user'))
+  return await datatables.of<LucidDataTable>(Transaction.query().join('user', 'user.id', 'transaction.user_id'))
     .addIndexColumn()
-    .addColumn('test', (row: any) => {
-      console.log(row)
+    .editColumn('amount', (row: Transaction) => {
       return row.amountFormat
     })
-    // .only(['id', 'email'])
-    // .limit((row) => {
-    //   row.limit(5)
-    // })
     .make(true)
 })

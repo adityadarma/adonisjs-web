@@ -32,6 +32,6 @@ export default class Transaction extends BaseModel {
   declare user: BelongsTo<typeof User>
 
   get amountFormat() {
-    return this.amount.toFixed(3)
+    return this.amount
   }
 }
