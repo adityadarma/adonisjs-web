@@ -12,6 +12,8 @@ import datatables from '@adityadarma/adonis-datatables/datatables'
 import Transaction from '#models/transaction'
 import LucidDataTable from '@adityadarma/adonis-datatables/lucid_datatable'
 import User from '#models/user'
+// import db from '@adonisjs/lucid/services/db'
+// import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
 
 router.on('/').render('pages/home')
 
@@ -41,11 +43,14 @@ router.get('/user', async({view}) => {
   return view.render('user')
 })
 
-router.get('/user/datatables', async () => {
-  return await datatables.of<LucidDataTable>(User.query().preload('transaction'))
+router.get('/user/datatables', async ({}) => {
+  return await datatables.of<LucidDataTable>(User.query().preload('transactions'))
     .addIndexColumn()
-    .editColumn('transaction.code', (row: User) => {
-      return 'www'
+    .addColumn('count_transactions', (row: User) => {
+      return row.transactions.length
     })
+    // .filterColumn('fullname', (query: ModelQueryBuilder, keyword: string) => {
+    //   query.whereRaw("CONCAT(users.email,'-',users.name)  like ?", [`%${keyword}%`])
+    // })
     .toJson()
 })
