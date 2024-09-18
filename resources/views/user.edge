@@ -31,10 +31,13 @@
         { data: "DT_RowIndex", name: "DT_RowIndex", orderable: false, searchable: false, width: "20px" },
         { data: "name", name: "name" },
         { data: "email", name: "email" },
-        { data: "count_transactions", name: "count_transactions", orderable: false },
+        { data: "fullname", name: "fullname" },
         { data: "isActive", name: "isActive" },
         { data: "lastLogin", name: "lastLogin" },
-    ]
+    ],
+    search: {
+      "regex": true
+    }
 });
 </script>
 </body>

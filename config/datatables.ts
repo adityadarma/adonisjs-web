@@ -1,5 +1,6 @@
 import { defineConfig } from '@adityadarma/adonis-datatables'
 import LucidDataTable from '@adityadarma/adonis-datatables/lucid_datatable'
+import DatabaseDataTable from '@adityadarma/adonis-datatables/database_datatable'
 
 const datatablesConfig = defineConfig({
   debug: true,
@@ -13,7 +14,7 @@ const datatablesConfig = defineConfig({
   index_column: 'DT_RowIndex',
   engines: {
     lucid: LucidDataTable,
-    // collection: CollectionDataTable,
+    database: DatabaseDataTable,
     // object: ObjectDataTable,
   },
   columns: {
@@ -25,7 +26,6 @@ const datatablesConfig = defineConfig({
   },
   json: {
     header: [],
-    options: false,
   },
 })
 export default datatablesConfig

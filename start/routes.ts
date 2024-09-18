@@ -11,9 +11,10 @@ import router from '@adonisjs/core/services/router'
 import datatables from '@adityadarma/adonis-datatables/datatables'
 import Transaction from '#models/transaction'
 import LucidDataTable from '@adityadarma/adonis-datatables/lucid_datatable'
+import DatabaseDataTable from '@adityadarma/adonis-datatables/database_datatable'
 import User from '#models/user'
-// import db from '@adonisjs/lucid/services/db'
-// import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
+import db from '@adonisjs/lucid/services/db'
+import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
 
 router.on('/').render('pages/home')
 
@@ -44,13 +45,29 @@ router.get('/user', async({view}) => {
 })
 
 router.get('/user/datatables', async ({}) => {
-  return await datatables.of<LucidDataTable>(User.query().preload('transactions'))
+  return await datatables.of<LucidDataTable>(User.query().preload('transactions').select('*', db.raw("CONCAT(users.name,' ',users.email) as fullname")))
     .addIndexColumn()
     .addColumn('count_transactions', (row: User) => {
       return row.transactions.length
     })
-    // .filterColumn('fullname', (query: ModelQueryBuilder, keyword: string) => {
-    //   query.whereRaw("CONCAT(users.email,'-',users.name)  like ?", [`%${keyword}%`])
+    // .orderColumn('name', 'name $1')
+    .orderColumn('fullname', (query: ModelQueryBuilder, direction: string) => {
+      query.orderBy('name', direction)
+    })
+    .filterColumn('fullname', (query: ModelQueryBuilder, keyword: string) => {
+      query.orWhereRaw("CONCAT(users.name,' ',users.email)  like ?", [`%${keyword}%`])
+    })
+    // .filter((query: ModelQueryBuilder) => {
+    //   query.where('name', 'like', "%adit%");
     // })
+    .addColumn('intro', 'Hi {{name}}!')
+    .toJson()
+
+  return await datatables.of<DatabaseDataTable>(db.from('users'))
+    .addIndexColumn()
+    .addColumn('count_transactions', (row: Record<string, any>) => {
+      console.log(row)
+      return row.name
+    })
     .toJson()
 })
