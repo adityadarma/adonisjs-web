@@ -23,7 +23,7 @@ export const http = defineConfig({
    * Enabling async local storage will let you access HTTP context
    * from anywhere inside your application.
    */
-  useAsyncLocalStorage: true,
+  useAsyncLocalStorage: false,
 
   /**
    * Manage cookies configuration. The settings for the session id cookie are

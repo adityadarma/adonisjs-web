@@ -12,9 +12,12 @@ import datatables from '@adityadarma/adonis-datatables/datatables'
 import Transaction from '#models/transaction'
 import LucidDataTable from '@adityadarma/adonis-datatables/lucid_datatable'
 import DatabaseDataTable from '@adityadarma/adonis-datatables/database_datatable'
+import ObjectDatatable from '@adityadarma/adonis-datatables/object_datatable'
 import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
-import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
+import { BaseModel, ModelQueryBuilder } from '@adonisjs/lucid/orm'
+import { HttpContext } from '@adonisjs/core/http'
+import collect from 'collect.js'
 
 router.on('/').render('pages/home')
 
@@ -31,26 +34,38 @@ router.get('/transaction', async({view}) => {
   return view.render('transaction')
 })
 
-router.get('/transaction/datatables', async () => {
-  return await datatables.of<LucidDataTable>(Transaction.query().preload('user'))
-    .addIndexColumn()
-    .editColumn('amount', (row: Transaction) => {
-      return row.amountFormat
-    })
-    .toJson()
+router.get('/transaction/datatables', async (ctx: HttpContext) => {
+  // const transactions = Transaction.query().preload('user')
+  // return await datatables.of<LucidDataTable>(transactions)
+  //   .setContext(ctx)
+  //   .addIndexColumn()
+  //   .editColumn('amount', (row: Transaction) => {
+  //     return row.amountFormat
+  //   })
+  //   .toJson()
+
+    const transactions = Transaction.query().preload('user')
+    return await datatables.of<ObjectDatatable>(transactions)
+      .setContext(ctx)
+      .addIndexColumn()
+      .addColumn('count_transactions', 0)
+      .addColumn('intro', 'Hi {{name}}!')
+      .toJson()
 })
 
 router.get('/user', async({view}) => {
   return view.render('user')
 })
 
-router.get('/user/datatables', async ({}) => {
-  return await datatables.of<LucidDataTable>(User.query().preload('transactions').select('*', db.raw("CONCAT(users.name,' ',users.email) as fullname")))
+router.get('/user/datatables', async (ctx: HttpContext) => {
+  const users = db.from('users').select('*', db.raw("CONCAT(users.name,' ',users.email) as fullname"))
+  return await datatables.of<DatabaseDataTable>(users)
+    .setContext(ctx)
     .addIndexColumn()
-    .addColumn('count_transactions', (row: User) => {
-      return row.transactions.length
+    .addColumn('count_transactions', (row: Record<string, any>) => {
+      return row.name
     })
-    // .orderColumn('name', 'name $1')
+    .orderColumn('name', 'name $1')
     .orderColumn('fullname', (query: ModelQueryBuilder, direction: string) => {
       query.orderBy('name', direction)
     })
@@ -60,14 +75,5 @@ router.get('/user/datatables', async ({}) => {
     // .filter((query: ModelQueryBuilder) => {
     //   query.where('name', 'like', "%adit%");
     // })
-    .addColumn('intro', 'Hi {{name}}!')
-    .toJson()
-
-  return await datatables.of<DatabaseDataTable>(db.from('users'))
-    .addIndexColumn()
-    .addColumn('count_transactions', (row: Record<string, any>) => {
-      console.log(row)
-      return row.name
-    })
     .toJson()
 })
