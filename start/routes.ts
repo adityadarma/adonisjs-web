@@ -10,14 +10,15 @@
 import router from '@adonisjs/core/services/router'
 import datatables from '@adityadarma/adonis-datatables/datatables'
 import Transaction from '#models/transaction'
-import LucidDataTable from '@adityadarma/adonis-datatables/lucid_datatable'
-import DatabaseDataTable from '@adityadarma/adonis-datatables/database_datatable'
-import ObjectDatatable from '@adityadarma/adonis-datatables/object_datatable'
+import LucidDataTable from '@adityadarma/adonis-datatables/engines/lucid_datatable'
+import DatabaseDataTable from '@adityadarma/adonis-datatables/engines/database_datatable'
+import ObjectDatatable from '@adityadarma/adonis-datatables/engines/object_datatable'
 import User from '#models/user'
 import db from '@adonisjs/lucid/services/db'
-import { BaseModel, ModelQueryBuilder } from '@adonisjs/lucid/orm'
+import { ModelQueryBuilder } from '@adonisjs/lucid/orm'
 import { HttpContext } from '@adonisjs/core/http'
 import collect from 'collect.js'
+import Datatables from '../packages/adonis-datatables/build/src/datatables.js'
 
 router.on('/').render('pages/home')
 
@@ -39,17 +40,20 @@ router.get('/transaction/datatables', async (ctx: HttpContext) => {
   // return await datatables.of<LucidDataTable>(transactions)
   //   .setContext(ctx)
   //   .addIndexColumn()
-  //   .editColumn('amount', (row: Transaction) => {
+  //   .addColumn('amount', (row: Transaction) => {
   //     return row.amountFormat
   //   })
   //   .toJson()
 
-    const transactions = Transaction.query().preload('user')
-    return await datatables.of<ObjectDatatable>(transactions)
+    const transactions = await Transaction.query().preload('user')
+    return await Datatables.object(transactions)
       .setContext(ctx)
       .addIndexColumn()
       .addColumn('count_transactions', 0)
-      .addColumn('intro', 'Hi {{name}}!')
+      .addColumn('intro', (row: Transaction) => {
+        return ctx.view.renderSync('text', {code: row.code})
+      })
+      .rawColumns(['intro'])
       .toJson()
 })
 
