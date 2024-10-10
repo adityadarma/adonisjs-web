@@ -55,7 +55,7 @@ router.get('/transaction/datatables', async (ctx: HttpContext) => {
         return ctx.view.renderSync('text', {code: row.code})
       })
       .rawColumns(['intro'])
-      .toJson()
+      .results()
 })
 
 router.get('/user', async({view}) => {
@@ -67,7 +67,30 @@ router.get('/user/datatables', async (ctx: HttpContext) => {
   return await datatables.of<DatabaseDataTable>(users)
     .setContext(ctx)
     .addIndexColumn()
+    // .setRowId((user) => {
+    //   return user.id
+    // })
+    .setRowId('{{id}}')
+    // .setRowClass((user) => {
+    //   return user.id % 2 == 0 ? 'alert-success' : 'alert-warning';
+    // })
+    .setRowClass('{{ id % 2 == 0 ? "alert-success" : "alert-warning" }}')
+    // .setRowData({
+    //   'data-id': (user) => {
+    //       return 'row-' + user.id;
+    //   },
+    //   'data-name': (user) => {
+    //       return 'row-' + user.name;
+    //   },
+    // })
+    .setRowData({
+      'data-id': 'row-{{id}}',
+      'data-name': 'row-{{name}}',
+    })
     .addColumn('count_transactions', (row: Record<string, any>) => {
+      return row.name
+    })
+    .editColumn('name', (row: Record<string, any>) => {
       return row.name
     })
     .orderColumn('name', 'name $1')
@@ -80,5 +103,5 @@ router.get('/user/datatables', async (ctx: HttpContext) => {
     // .filter((query: ModelQueryBuilder) => {
     //   query.where('name', 'like', "%adit%");
     // })
-    .toJson()
+    .results()
 })
