@@ -20,6 +20,7 @@ import { HttpContext } from '@adonisjs/core/http'
 // import collect from 'collect.js'
 import Datatables from '../packages/adonis-datatables/build/src/datatables.js'
 import { DatabaseQueryBuilder } from '@adonisjs/lucid/database'
+import LucidDataTable from '@adityadarma/adonis-datatables/engines/lucid_datatable'
 
 router.on('/').render('pages/home')
 
@@ -32,20 +33,30 @@ router.get('/:provider/redirect', ({ ally, params }) => {
   console.log(driverInstance)
 }).where('provider', /google/)
 
-router.get('/transaction', async({view}) => {
-  return view.render('transaction')
+router.get('/lucid', async({view}) => {
+  return view.render('lucid')
 })
 
-router.get('/transaction/datatables', async (ctx: HttpContext) => {
-  // const transactions = Transaction.query().preload('user')
-  // return await datatables.of<LucidDataTable>(transactions)
-  //   .setContext(ctx)
-  //   .addIndexColumn()
-  //   .addColumn('amount', (row: Transaction) => {
-  //     return row.amountFormat
-  //   })
-  //   .toJson()
+router.get('/lucid/datatables', async (ctx: HttpContext) => {
+  const transactions = Transaction.query().preload('user')
+  return await datatables.of<LucidDataTable>(transactions)
+    .setContext(ctx)
+    .addIndexColumn()
+    .addColumn('user_name', (row: Transaction) => {
+      return row.user.name
+    })
+    .addColumn('intro', (row: Transaction) => {
+      return ctx.view.renderSync('text', {code: row.code})
+    })
+    .rawColumns(['intro'])
+    .results()
+})
 
+router.get('/object', async({view}) => {
+  return view.render('object')
+})
+
+router.get('/object/datatables', async (ctx: HttpContext) => {
     const transactions = await Transaction.query().preload('user')
     return await Datatables.object(transactions)
       .setContext(ctx)
@@ -58,11 +69,11 @@ router.get('/transaction/datatables', async (ctx: HttpContext) => {
       .results()
 })
 
-router.get('/user', async({view}) => {
-  return view.render('user')
+router.get('/datatabse', async({view}) => {
+  return view.render('datatabse')
 })
 
-router.get('/user/datatables', async (ctx: HttpContext) => {
+router.get('/datatabse/datatables', async (ctx: HttpContext) => {
   const users = db.from('users').select('*', db.raw("CONCAT(users.name,' ',users.email) as fullname"))
   return await datatables.of<DatabaseDataTable>(users)
     .setContext(ctx)
