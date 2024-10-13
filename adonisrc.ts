@@ -39,7 +39,8 @@ export default defineConfig({
     () => import('@adonisjs/ally/ally_provider'),
     () => import('@adonisjs/lock/lock_provider'),
     () => import('@adonisjs/redis/redis_provider'),
-    () => import('@adityadarma/adonis-datatables/datatables_provider')
+    () => import('@adityadarma/adonis-datatables/datatables_provider'),
+    () => import('@adityadarma/adonis-database-cryptable/cryptable_provider')
   ],
 
   /*

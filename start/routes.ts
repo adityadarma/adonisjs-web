@@ -21,8 +21,20 @@ import { HttpContext } from '@adonisjs/core/http'
 import Datatables from '../packages/adonis-datatables/build/src/datatables.js'
 import { DatabaseQueryBuilder } from '@adonisjs/lucid/database'
 import LucidDataTable from '@adityadarma/adonis-datatables/engines/lucid_datatable'
+import User from '#models/user'
 
 router.on('/').render('pages/home')
+
+router.get('/encrypt', async () => {
+  // const user = await User.create({
+  //   name: 'aditya',
+  //   email: 'fdfdfgdg',
+  //   password: 'yerytru'
+  // })
+  const user = await User.query().orderByEncrypted('name').first()
+  console.log(user)
+  return 200
+})
 
 router.get('/google/redirect', ({ ally }) => {
   return ally.use('google').redirect()
