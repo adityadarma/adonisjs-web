@@ -21,6 +21,32 @@ const loggerConfig = defineConfig({
           .toArray(),
       },
     },
+    slack: {
+      enabled: true,
+      name: env.get('APP_NAME'),
+      level: env.get('LOG_LEVEL', 'info'),
+      icon: 'boom',
+      url: env.get('LOG_SLACK_WEBHOOK_URL'),
+      redact: {
+        paths: ['password', '*.password']
+      },
+      transport: {
+        targets: targets()
+        .pushIf(!app.inProduction, targets.pretty())
+        .pushIf(app.inProduction, targets.file({ destination: 1 }))
+        .push({
+          target: '@youngkiu/pino-slack-webhook',
+          level: 'info',
+          options: {
+            webhookUrl: env.get('LOG_SLACK_WEBHOOK_URL'),
+            channel: '#error_notifications',
+            username: 'webhookbot',
+            icon_emoji: ':ghost:'
+          }
+        })
+        .toArray()
+      }
+    },
   },
 })
 

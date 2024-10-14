@@ -53,5 +53,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   LOCK_STORE: Env.schema.enum(['redis', 'memory'] as const),
 
   REDIS_HOST: Env.schema.string({ format: 'host' }),
-  REDIS_PORT: Env.schema.number()
+  REDIS_PORT: Env.schema.number(),
+
+  LOG_SLACK_WEBHOOK_URL: Env.schema.string()
 })

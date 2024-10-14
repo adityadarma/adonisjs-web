@@ -40,7 +40,8 @@ export default defineConfig({
     () => import('@adonisjs/lock/lock_provider'),
     () => import('@adonisjs/redis/redis_provider'),
     () => import('@adityadarma/adonis-datatables/datatables_provider'),
-    () => import('@adityadarma/adonis-database-cryptable/cryptable_provider')
+    () => import('@adityadarma/adonis-database-cryptable/cryptable_provider'),
+    () => import('@adityadarma/adonis-logger-slack/slack_provider')
   ],
 
   /*

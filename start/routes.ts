@@ -22,8 +22,13 @@ import Datatables from '../packages/adonis-datatables/build/src/datatables.js'
 import { DatabaseQueryBuilder } from '@adonisjs/lucid/database'
 import LucidDataTable from '@adityadarma/adonis-datatables/engines/lucid_datatable'
 import User from '#models/user'
+import logger from '@adonisjs/core/services/logger'
 
 router.on('/').render('pages/home')
+router.get('/logger', async () => {
+  logger.use('slack').info('Testttt')
+  return 200
+})
 
 router.get('/encrypt', async () => {
   // const user = await User.create({
