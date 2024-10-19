@@ -51,6 +51,7 @@
     "@adityadarma/adonis-database-cryptable": "file:packages/adonis-database-cryptable",
     "@adityadarma/adonis-datatables": "file:packages/adonis-datatables",
     "@adityadarma/adonis-logger-slack": "file:packages/adonis-slack",
+    "@adityadarma/adonis-service-repository": "file:packages/adonis-service-repository",
     "@adonisjs/ally": "^5.0.2",
     "@adonisjs/auth": "^9.2.0",
     "@adonisjs/core": "^6.8.0",
