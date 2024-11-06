@@ -3,7 +3,7 @@ import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
 
 const dbConfig = defineConfig({
-  connection: 'mssql',
+  connection: 'postgres',
   connections: {
     mysql: {
       client: 'mysql2',

@@ -23,8 +23,8 @@ import { DatabaseQueryBuilder } from '@adonisjs/lucid/database'
 import LucidDataTable from '@adityadarma/adonis-datatables/engines/lucid_datatable'
 import User from '#models/user'
 import logger from '@adonisjs/core/services/logger'
-// import vine from '@vinejs/vine'
 import string from '@adonisjs/core/helpers/string'
+import { test } from '#validators/test'
 
 router.on('/').render('pages/home')
 router.get('/logger', async () => {
@@ -33,32 +33,27 @@ router.get('/logger', async () => {
 })
 
 router.get('/encrypt', async () => {
-  // vine
-  // .compile(
-  //   vine.object({
-  //     email: vine.string().unique(async (db, value, field) => {
-  //       const user = await db
-  //         .from('users')
-  //         .whereNot('id', field.meta.userId)
-  //         .whereEncrypted('email', value)
-  //         .first()
-  //       return !user
-  //     })
-  //   })
-  // )
-  // const user = await User.create({
-  //   name: 'aditya',
-  //   email: 'fdfdfgdg',
-  //   password: 'yerytru'
-  // })
-  const user = await User.create({
+  await User.create({
     name: 'sffdf',
     email: string.random(32),
     password: 'fdfd'
   })
   // console.log(user)
-  // const user2 = await User.query().whereEncrypted('name', 'sffdf').orderBy('id', 'desc').first()
-  // console.log(user2)
+  const user2 = await User.query()
+    .whereEncrypted('email', 'XzyifAwZq85fdIUf-0EUckvMKcX07')
+    // .orderByEncrypted('name', 'asc')
+    .first()
+  console.log(user2)
+  return user2 ?? 'edf'
+})
+
+router.post('/encrypt', async ({request}) => {
+  const data = await request.validateUsing(test)
+  const user = await User.create({
+    name: data.name,
+    email: data.email,
+    password: data.password
+  })
   return user
 })
 

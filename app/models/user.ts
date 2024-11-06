@@ -13,7 +13,7 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 })
 
 export default class User extends compose(BaseModel, Cryptable, AuthFinder) {
-  $cryptable: string[] = ['name']
+  $cryptable: string[] = ['name', 'email']
 
   @column({ isPrimary: true })
   declare id: number
