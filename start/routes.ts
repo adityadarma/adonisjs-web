@@ -24,6 +24,7 @@ import LucidDataTable from '@adityadarma/adonis-datatables/engines/lucid_datatab
 import User from '#models/user'
 import logger from '@adonisjs/core/services/logger'
 // import vine from '@vinejs/vine'
+import string from '@adonisjs/core/helpers/string'
 
 router.on('/').render('pages/home')
 router.get('/logger', async () => {
@@ -50,9 +51,15 @@ router.get('/encrypt', async () => {
   //   email: 'fdfdfgdg',
   //   password: 'yerytru'
   // })
-  const user = await User.query().orderByEncrypted('name').first()
-  console.log(user)
-  return 200
+  const user = await User.create({
+    name: 'sffdf',
+    email: string.random(32),
+    password: 'fdfd'
+  })
+  // console.log(user)
+  // const user2 = await User.query().whereEncrypted('name', 'sffdf').orderBy('id', 'desc').first()
+  // console.log(user2)
+  return user
 })
 
 router.get('/google/redirect', ({ ally }) => {

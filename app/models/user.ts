@@ -5,13 +5,16 @@ import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import Transaction from './transaction.js'
+import { Cryptable } from '@adityadarma/adonis-database-cryptable'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
   passwordColumnName: 'password',
 })
 
-export default class User extends compose(BaseModel, AuthFinder) {
+export default class User extends compose(BaseModel, Cryptable, AuthFinder) {
+  $cryptable: string[] = ['name']
+
   @column({ isPrimary: true })
   declare id: number
 
